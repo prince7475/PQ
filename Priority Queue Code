@@ -1,0 +1,86 @@
+class PQ {
+  constructor(){
+    this.minHeap = [];
+    this.size = 0;
+  }
+
+  isEmpty(){
+    return this.size === 0;
+  }
+
+  peek(){
+    return this.minHeap[0]
+  }
+
+  add(value){
+    this.minHeap.push(value);
+    this.size++
+    return this.swimUp(this.minHeap, this.size - 1)
+  }
+
+  swap(idx1 , idx2, array){
+    let temp = array[idx1]
+    array[idx1] = array[idx2]
+    array[idx2] = temp
+  }
+
+  swimUp(array,index){
+    let parentIdx = Math.floor((index - 1)/ 2)
+    while(array[parentIdx] > array[index]){
+      this.swap(parentIdx,index,array)
+      index = parentIdx;
+      parentIdx = Math.floor((index - 1) /2)
+    }
+    return true
+  }
+
+
+  poll(){
+   return this.removeAt(0)
+  }
+
+  removeAt(idx){
+    if(idx < 0 || idx >= this.size) return "Out of bound"
+    this.swap(idx,this.size -1,this.minHeap)
+    const removedValue = this.minHeap.pop();
+    this.size--
+    this.swimDown(idx,this.minHeap)
+    return removedValue;
+  }
+
+  swimDown(idx,array){
+    let leftChildIdx = Math.floor((2*idx) + 1)
+    while(leftChildIdx <= array.length - 1){
+      let rightChildIdx = Math.floor((2*idx) + 2) <= array.length - 1 ? Math.floor((2*idx) + 2) : -1
+      const smallestChildIndex = rightChildIdx != -1 && array[rightChildIdx] < array[leftChildIdx] ? rightChildIdx : leftChildIdx
+      if(array[idx] > array[smallestChildIndex]){
+        this.swap(idx,smallestChildIndex,array)
+        idx = smallestChildIndex
+        leftChildIdx = Math.floor((2*idx) + 1)
+      }else {
+        return;
+      }
+    }
+  }
+
+  
+
+}
+
+
+const pq = new PQ()
+pq.add(5)
+pq.add(10)
+pq.add(7)
+pq.add(11)
+pq.add(2)
+pq.add(9)
+pq.add(2)
+pq.add(6)
+pq.add(19)
+pq.add(21)
+pq.add(17)
+pq.add(12)
+console.log(pq.poll())
+
+console.log(pq)
